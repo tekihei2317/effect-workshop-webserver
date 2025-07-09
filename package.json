@@ -23,6 +23,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@effect/platform-bun": "^0.72.15",
     "effect": "^3.16.12",
     "ws": "^8.18.3"
   }
