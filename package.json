@@ -1,0 +1,29 @@
+{
+  "name": "effect-workshop-webserver",
+  "version": "1.0.0",
+  "description": "effect workshopのWebサーバーの実装をやってみる",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tekihei2317/effect-workshop-webserver.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tekihei2317/effect-workshop-webserver/issues"
+  },
+  "homepage": "https://github.com/tekihei2317/effect-workshop-webserver#readme",
+  "devDependencies": {
+    "@types/bun": "^1.2.18",
+    "@types/ws": "^8.18.1",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "effect": "^3.16.12",
+    "ws": "^8.18.3"
+  }
+}
