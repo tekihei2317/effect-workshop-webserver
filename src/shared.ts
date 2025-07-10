@@ -20,21 +20,6 @@ export class WSSServer extends Context.Tag("WSSServer")<
   );
 }
 
-export const ListenLive: Layer.Layer<
-  never,
-  ConfigError.ConfigError,
-  HttpServer
-> = Layer.effectDiscard(
-  Effect.gen(function* () {
-    const port = yield* Config.integer("PORT").pipe(Config.withDefault(3000));
-    const server = yield* HttpServer;
-
-    yield* Effect.sync(() => {
-      server.listen(port, () => console.log("Server stands on port", port));
-    });
-  })
-);
-
 export class CurrentConnections extends Context.Tag("CurrentConnections")<
   CurrentConnections,
   Map<string, M.WebSocketConnection>
@@ -42,7 +27,7 @@ export class CurrentConnections extends Context.Tag("CurrentConnections")<
   static readonly Live = Layer.sync(CurrentConnections, () => new Map());
 }
 
-function getAvailableColors(
+export function getAvailableColors(
   currentConnections: Map<string, M.WebSocketConnection>
 ): M.Color[] {
   const currentColors = Array.from(currentConnections.values()).map(
@@ -55,35 +40,6 @@ function getAvailableColors(
 
   return availableColors;
 }
-
-export const HttpLive: Layer.Layer<
-  never,
-  never,
-  HttpServer | CurrentConnections
-> = Layer.effectDiscard(
-  Effect.gen(function* () {
-    const http = yield* HttpServer;
-    const currentConnections = yield* CurrentConnections;
-
-    http.on("request", (req, res) => {
-      if (req.url !== "/colors") {
-        res.writeHead(404);
-        res.end("Not Found");
-
-        return;
-      }
-
-      const message = M.AvailableColorsResponse.make({
-        _tag: "availableColors",
-        colors: getAvailableColors(currentConnections),
-      });
-
-      res.writeHead(200, { "Content-Type": "application/json" });
-
-      res.end(JSON.stringify(message));
-    });
-  })
-);
 
 export const WSServerLive: Layer.Layer<
   never,
