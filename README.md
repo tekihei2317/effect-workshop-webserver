@@ -60,6 +60,28 @@ Claude Codeが落ちたので曖昧な理解のまま進むのが難しくなっ
 
 ---
 
+とりあえず写経&コピペしながら実装。HTTPサーバーの定義が冗長なので、なんとかしたい
+
+```ts
+const serverLayers = Layer.merge(HTTP.HttpLive, WS.WSServerLive);
+
+const app = pipe(
+  serverLayers,
+  Layer.provide(HTTP.HTTPServerLive),
+  Layer.provide(SERVER.WSSServer.Live),
+  Layer.provide(SERVER.CurrentConnections.Live),
+  Layer.provide(SERVER.HttpServer.Live)
+);
+```
+
+- nodeのcreateServer使っているところ（Server.HttpServer.Live）
+- platform-nodeのNodeHttpServer使っているところ（Http.HttpServerLive）
+- platformのHttpServer使っているところ（同上）
+- ルーティング定義しているところ（Http.HttpLive）
+
+ルーティング定義するところと、@effect/platformのHttpServerを使うところは別にレイヤーに分けなくてもいいと思う。
+
+nodeと@effect/platformで分ける必要があるのは、WebSocketのサーバーの方でnodeのHTTPサーバーを呼び出して使うから。
 
 ---
 

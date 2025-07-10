@@ -16,25 +16,7 @@ import {
 import * as C from "./config.ts";
 import * as M from "./model.ts";
 
-export const HTTPServerLive: Layer.Layer<
-  HttpServer.HttpServer,
-  ConfigError.ConfigError | HttpServerError.ServeError,
-  _HttpServer
-> = Layer.scoped(
-  HttpServer.HttpServer,
-  _HttpServer.pipe(
-    Effect.zip(C.PORT),
-    Effect.flatMap(([server, port]) =>
-      NodeHttpServer.make(() => server, { port })
-    )
-  )
-).pipe(HttpServer.withLogAddress);
-
-export const HttpLive: Layer.Layer<
-  never,
-  never,
-  HttpServer.HttpServer | CurrentConnections
-> = HttpRouter.empty.pipe(
+const router = HttpRouter.empty.pipe(
   HttpRouter.get(
     "/colors",
     Effect.gen(function* () {
@@ -48,6 +30,23 @@ export const HttpLive: Layer.Layer<
         HttpServerResponse.schemaJson(M.AvailableColorsResponse)
       );
     })
-  ),
-  HttpServer.serve(HttpMiddleware.logger)
+  )
+);
+
+const ServerLive = Layer.scoped(
+  HttpServer.HttpServer,
+  Effect.gen(function* () {
+    const http = yield* _HttpServer;
+    const port = yield* C.PORT;
+    return yield* NodeHttpServer.make(() => http, { port });
+  })
+);
+
+export const HttpLive: Layer.Layer<
+  never,
+  ConfigError.ConfigError | HttpServerError.ServeError,
+  _HttpServer | CurrentConnections
+> = pipe(
+  router.pipe(HttpServer.serve(), HttpServer.withLogAddress),
+  Layer.provide(ServerLive)
 );

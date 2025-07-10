@@ -8,7 +8,6 @@ const serverLayers = Layer.merge(HTTP.HttpLive, WS.WSServerLive);
 
 const app = pipe(
   serverLayers,
-  Layer.provide(HTTP.HTTPServerLive),
   Layer.provide(SERVER.WSSServer.Live),
   Layer.provide(SERVER.CurrentConnections.Live),
   Layer.provide(SERVER.HttpServer.Live)
