@@ -73,6 +73,7 @@ export const WSServerLive: Layer.Layer<
           }
         } catch (err) {
           console.error("Failed to process message:", err);
+          ws.close(); // Close connection for invalid messages
         }
       });
 
