@@ -37,3 +37,27 @@ Layerを使ってhttp、wss、listenを書き換える。それぞれ`Layer.sync
 - エフェクト内ではyield*でサービスを呼び出すことができ、呼び出すと依存に追加される。
 - 実際に実行する前に、Layer.provide()でインスタンスを注入する。
 - サービスはシングルトンで共有化されるので、そうして問題ないものだけを入れる
+
+---
+
+3→4
+
+HttpServerに関して、`index.ts`で`HTTP.LIVE`、`HTTP.HTTPServerLive`、`SERVER.HttpServer.Live`と似たような名前のものが複数あり、とてもややこしい。
+
+- `HTTP.LIVE` HTTPサーバーのサービスを、EffectのHTTPサーバーに変換している？
+- `HTTP.HTTPServerLive` HTTPサーバーの具体的な実装
+- `Server.HttpServer.Live` HTTPサーバーのインスタンス
+
+`Server.HttpServer.Live`ではNodeのcreateServerを使っていて、`HTTP.LIVE`では`@effect/platform-node`の`NodeHttpServer`を使っていて冗長なので、絶対なんとかなるだろうという気がしている。
+
+---
+
+Claude Codeが落ちたので曖昧な理解のまま進むのが難しくなっている。Layerという概念について理解していないことに気づいたのでドキュメントを読む。
+
+どうやらServiceとは違うものらしい。ServiceはEffectの依存に含まれるもので、あとから外部から注入するものと理解している。
+
+[What is Layer?](./what-is-layer.md)
+
+---
+
+Part 5はEffectが提供するデータ構造（HashMap、Ref）への書き換えで、Part 6,7は高度な内容なのでここまでとする。

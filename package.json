@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@effect/platform-bun": "^0.72.15",
+    "@effect/platform-node": "^0.89.3",
     "effect": "^3.16.12",
     "ws": "^8.18.3"
   }
